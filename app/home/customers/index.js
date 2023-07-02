@@ -40,10 +40,9 @@ export default function index() {
         <FlatList
           data={data.customers}
           renderItem={({ item }) => (
-            <View
-              style={
-                "bg-blue-100 px-4 py-2 rounded-md mb-4 flex flex-row items-center"
-              }
+            <Pressable
+              onPress={() => router.push(`/home/customers/${item.id}`)}
+              style={tw`bg-purple-100 border border-purple-400 px-4 py-2 rounded-md mb-2 flex flex-row items-center`}
             >
               <View
                 style={
@@ -62,7 +61,7 @@ export default function index() {
                 </Text>
                 <Text>{item.phone}</Text>
               </View>
-            </View>
+            </Pressable>
           )}
         />
       </View>
