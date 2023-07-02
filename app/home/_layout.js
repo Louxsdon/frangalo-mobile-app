@@ -38,9 +38,10 @@ export default function BottomNav() {
           }}
         />
         <Tabs.Screen
-          name="gallery/index"
+          name="gallery"
           options={{
             title: "Gallery",
+            headerShown: false,
             tabBarIcon: (props) => (
               <TabItem
                 iconFamily={"MaterialIcons"}

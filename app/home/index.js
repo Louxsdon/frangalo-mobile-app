@@ -37,41 +37,37 @@ export default function index() {
     );
   };
   return (
-    <>
-      <ScrollView style={tw`bg-white`}>
-        <View style={"bg-primary "}>
-          <View style={"relative"}>
-            <Text style={"text-primary-100 p-5 pb-16"}>
-              Good afternoon, {user?.name}
-            </Text>
-            <View style={"bg-white h-full flex-1 rounded-t-3xl p-5"}>
-              <Text style={"text-2xl mb-3 text-primary"}>Explore</Text>
-              <View style={"flex flex-row mb-5"}>
-                <DashCard
-                  route={"/home/orders/create"}
-                  text="New Order"
-                  icon="ios-add-circle-outline"
-                />
-                <DashCard
-                  route={"/home/customers/create"}
-                  text="Add Customer"
-                  icon="ios-person-add-outline"
-                />
-                <DashCard
-                  route={"/home/orders"}
-                  text="View Orders"
-                  icon="ios-cube-outline"
-                />
-              </View>
-              <Text style={"text-xl mb-3 text-primary"}>Ongoing Orders</Text>
-              <FlatList data={data?.progress} renderItem={RenderOrders} />
-            </View>
+    <View style={"flex-1 bg-white"}>
+      <View style={"bg-primary flex-1"}>
+        <Text style={"text-primary-100 p-5 pb-16"}>
+          Good afternoon, {user?.name}
+        </Text>
+        <View style={"bg-white h-full flex-1 rounded-t-3xl p-5"}>
+          <Text style={"text-2xl mb-3 text-primary"}>Explore</Text>
+          <View style={"flex flex-row mb-5"}>
+            <DashCard
+              route={"/home/orders/create"}
+              text="New Order"
+              icon="ios-add-circle-outline"
+            />
+            <DashCard
+              route={"/home/customers/create"}
+              text="Add Customer"
+              icon="ios-person-add-outline"
+            />
+            <DashCard
+              route={"/home/orders"}
+              text="View Orders"
+              icon="ios-cube-outline"
+            />
           </View>
+          <Text style={"text-xl mb-3 text-primary"}>Ongoing Orders</Text>
+          <FlatList data={data?.progress} renderItem={RenderOrders} />
         </View>
-      </ScrollView>
+      </View>
 
       <StatusBar style="light" />
-    </>
+    </View>
   );
 }
 

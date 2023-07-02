@@ -6,12 +6,14 @@ import { Slot, Stack, useRouter } from "expo-router";
 import { useAuth } from "../lib/services/auth";
 import { NativeBaseProvider } from "native-base";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useAppState } from "../lib/hooks/useAppStatus";
 
 axios.defaults.baseURL = API_URL;
 
 const queryClient = new QueryClient();
 
 export default function AppLayout() {
+  useAppState();
   const { token, user } = useAuth((state) => state);
   const router = useRouter();
 
@@ -24,7 +26,7 @@ export default function AppLayout() {
 
   useEffect(() => {
     if (token && user) {
-      router.replace("/home");
+      router.replace("/home/gallery");
     }
   }, [token, user]);
 
@@ -36,6 +38,10 @@ export default function AppLayout() {
           <Stack.Screen
             name="index"
             options={{ title: "Login", headerShown: false }}
+          />
+          <Stack.Screen
+            name="register"
+            options={{ title: "Account Registration" }}
           />
         </Stack>
       </NativeBaseProvider>
