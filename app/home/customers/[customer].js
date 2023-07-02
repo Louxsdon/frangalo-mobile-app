@@ -3,7 +3,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import View from "../../../components/View";
 import Input from "../../../components/Input";
 import Button from "../../../components/Button";
-import { HStack, Radio, ScrollView, StatusBar } from "native-base";
+import { HStack, Modal, Radio, ScrollView, StatusBar } from "native-base";
 import Text from "../../../components/Text";
 import Loader from "../../../components/Loader";
 import {
@@ -17,10 +17,11 @@ import { Alert } from "react-native";
 
 export default function Update() {
   const router = useRouter();
-
   const { customer } = useLocalSearchParams();
 
   const { data, isLoading, error, isError } = useCustomer(customer);
+
+  const [deleteRecord, setDeleteRecord] = useState(false);
 
   if (isLoading) {
     return (
@@ -41,6 +42,37 @@ export default function Update() {
 
   return (
     <ScrollView style={tw`relative flex-1 bg-white`}>
+      <Modal isOpen={deleteRecord} onClose={() => setDeleteRecord(false)}>
+        <Modal.Content>
+          <Modal.CloseButton />
+          <Modal.Header>Delete Customer</Modal.Header>
+          <Modal.Body>
+            <Text>Are you sure you want to delete this?</Text>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              style={"mr-5 px-4 py-2 rounded-md bg-blue-300 "}
+              innerStyle={"text-blue-700"}
+              variant="ghost"
+              colorScheme="blueGray"
+              onPress={() => {
+                setDeleteRecord(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              style={"bg-red-600 px-8 py-2 rounded-md"}
+              innerStyle={"text-red-100"}
+              onPress={() => {
+                setModalVisible(false);
+              }}
+            >
+              Yes
+            </Button>
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
       <View style={"bg-white p-4"}>
         <DataView label={"NAME"} value={data.name} />
         <DataView label={"PHONE"} value={data.phone} />
@@ -51,13 +83,14 @@ export default function Update() {
             <Button
               onPress={() => router.push(`/home/customers/edit/${data.id}`)}
               rounded
-              style="bg-orange-600 px-4 py-[2px] mt-8 border- rounded-md border-[#b30269] mr-4"
-              innerStyle="px-5 p-2 text-orange-200 text-xl font-semibold"
+              style="bg-blue-300 px-4 py-[2px] mt-8 border- rounded-md border-[#b30269] mr-4"
+              innerStyle="px-5 p-2 text-blue-600 text-xl font-semibold"
             >
               Edit Customer
             </Button>
             <Button
-              onPress={() => Alert.prompt("Delete this item?")}
+              // onPress={() => Alert.prompt("Delete this item?")}
+              onPress={() => setDeleteRecord(true)}
               rounded
               style="bg-red-700 px-4 py-[2px] mt-8  rounded-md border-red-200"
               innerStyle="px-8 p-2 text-red-200 text-xl font-semibold"
