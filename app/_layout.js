@@ -26,7 +26,7 @@ export default function AppLayout() {
 
   useEffect(() => {
     if (token && user) {
-      router.replace("/home/customers");
+      router.replace("/home/orders");
     }
   }, [token, user]);
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import View from "../../../components/View";
 import Text from "../../../components/Text";
 import Icon from "../../../components/Icon";
@@ -13,14 +13,18 @@ import { useFormik } from "formik";
 import { CheckIcon, Radio, Select } from "native-base";
 import { useCustomers } from "../../../lib/services/customers";
 import { useAddOrder } from "../../../lib/services/orders";
+import { dressStyles } from "../../../lib/utils";
+import Loader from "../../../components/Loader";
 
 export default function index() {
   const router = useRouter();
   const { addOrder } = useAddOrder();
   const { data, isLoading } = useCustomers();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useFormik({
     initialValues: {
+      style: "",
       shirt_length: "",
       around_arm: "",
       waist: "",
@@ -36,15 +40,16 @@ export default function index() {
       notes: "",
     },
     onSubmit: (values) => {
-      // alert(JSON.stringify(values));
+      setIsSubmitting(true);
       addOrder(values, {
         onSuccess: (res) => {
-          alert("Order added successfully!");
+          setIsSubmitting(false);
+          alert("Order placed successfully!");
           router.push("/home/orders");
         },
         onError: (err) => {
           const errors = err.response?.data?.errors;
-          // alert(JSON.stringify(errors));
+          setIsSubmitting(false);
           form.setErrors(errors);
         },
       });
@@ -66,151 +71,173 @@ export default function index() {
   })();
 
   return (
-    <ScrollView style={"relative flex-1 bg-white"}>
-      <StatusBar style="light" backgroundColor="#790e4c" />
-      <View style={"bg-white p-4"}>
-        <View style={"flex flex-row items-center pb-4"}>
-          <View style={"w-5/6"}>
+    <>
+      <Loader isOpen={isSubmitting} text={"Placing Order"} />
+      <ScrollView style={"relative flex-1 bg-white"}>
+        <StatusBar style="light" backgroundColor="#790e4c" />
+        <View style={"bg-white p-4"}>
+          <View style={"flex flex-row items-center pb-4"}>
+            <View style={"w-5/6"}>
+              <Select
+                selectedValue={form.values.customer}
+                minWidth="200"
+                accessibilityLabel="Select Customer"
+                placeholder={isLoading ? "Loading..." : "Select Customer"}
+                isDisabled={isLoading}
+                _selectedItem={{
+                  bg: "#ffceeb",
+                  endIcon: <CheckIcon size="2" />,
+                }}
+                mt={1}
+                mr={4}
+                style={tw`w-full`}
+                onValueChange={(val) => form.setFieldValue("customer_id", val)}
+              >
+                {data?.customers.map((customer, i) => (
+                  <Select.Item
+                    key={i}
+                    label={customer?.name + " - " + customer?.phone}
+                    value={customer?.id}
+                  />
+                ))}
+              </Select>
+            </View>
+            <Button
+              onPress={() => router.push("home/customers/create")}
+              style={"bg-green-600 p-3 rounded-full"}
+            >
+              <Icon name={"add"} style={"text-green-100"} size={28} />
+            </Button>
+          </View>
+          <View style={"w-full mb-1.5"}>
             <Select
-              selectedValue={form.values.customer}
+              selectedValue={form.values.style}
               minWidth="200"
-              accessibilityLabel="Select Customer"
-              placeholder={isLoading ? "Loading..." : "Select Customer"}
-              isDisabled={isLoading}
+              accessibilityLabel="Choose Style"
+              placeholder={"Choose Style"}
               _selectedItem={{
                 bg: "#ffceeb",
                 endIcon: <CheckIcon size="2" />,
               }}
               mt={1}
-              mr={4}
-              style={tw`w-full`}
-              onValueChange={(val) => form.setFieldValue("customer_id", val)}
+              style={tw`w-[28%]`}
+              onValueChange={(val) => form.setFieldValue("style", val)}
             >
-              {data?.customers.map((customer, i) => (
-                <Select.Item
-                  key={i}
-                  label={customer?.name + " - " + customer?.phone}
-                  value={customer?.id}
-                />
+              {dressStyles.map((dress, i) => (
+                <Select.Item key={i} label={dress.name} value={dress.name} />
               ))}
             </Select>
           </View>
+          <Wrapper>
+            <OrderInput
+              onChangeText={form.handleChange("shirt_length")}
+              value={form.values.shirt_length}
+              placeholder="Shirt Length"
+              label="Shirt Length"
+              style={"mr-3"}
+            />
+            <OrderInput
+              onChangeText={form.handleChange("around_arm")}
+              value={form.values.around_arm}
+              placeholder="Around Arm"
+              label="Around Arm"
+              style={"mr-3"}
+            />
+          </Wrapper>
+          <Wrapper>
+            <OrderInput
+              onChangeText={form.handleChange("waist")}
+              value={form.values.waist}
+              placeholder="Waist"
+              label="Waist"
+              style={"mr-3"}
+            />
+            <OrderInput
+              onChangeText={form.handleChange("neck")}
+              value={form.values.neck}
+              placeholder="Neck"
+              label="Neck"
+              style={"mr-3"}
+            />
+          </Wrapper>
+          <Wrapper>
+            <OrderInput
+              onChangeText={form.handleChange("trouser_length")}
+              value={form.values.trouser_length}
+              placeholder="Trouser length"
+              label="Trouser length"
+              style={"mr-3"}
+            />
+            <OrderInput
+              onChangeText={form.handleChange("shoulder_to_chest")}
+              value={form.values.shoulder_to_chest}
+              placeholder="Shoulder to nest"
+              label="Shoulder to nest"
+              style={"mr-3"}
+            />
+          </Wrapper>
+          <Wrapper>
+            <OrderInput
+              onChangeText={form.handleChange("hip")}
+              value={form.values.hip}
+              placeholder="Hip"
+              label="Hip"
+              style={"mr-3"}
+            />
+            <OrderInput
+              onChangeText={form.handleChange("shoulder_to_hip")}
+              value={form.values.shoulder_to_hip}
+              placeholder="Shoulder to hip"
+              label="Shoulder to hip"
+              style={"mr-3"}
+            />
+          </Wrapper>
+          <Wrapper>
+            <OrderInput
+              onChangeText={form.handleChange("breast_length")}
+              value={form.values.breast_length}
+              placeholder="Breast length"
+              label="Breast length"
+              style={"mr-3"}
+            />
+            <OrderInput
+              onChangeText={form.handleChange("shoulder_to_waist")}
+              value={form.values.shoulder_to_waist}
+              placeholder="Shoulder to waist"
+              label="Shoulder to waist"
+              style={"mr-3"}
+            />
+          </Wrapper>
+          <Wrapper>
+            <OrderInput
+              onChangeText={form.handleChange("ankle")}
+              value={form.values.ankle}
+              placeholder="Ankle"
+              label="Ankle"
+              style={"mr-3"}
+            />
+            <OrderInput
+              onChangeText={form.handleChange("dress_length")}
+              value={form.values.dress_length}
+              placeholder="Dress length"
+              label="Dress length"
+              style={"mr-3"}
+            />
+          </Wrapper>
+
+          <Input placeholder="Notes" multiline={true} numberOfLines={3} />
+
           <Button
-            onPress={() => router.push("home/customers/create")}
-            style={"bg-green-600 p-3 rounded-full"}
+            onPress={form.submitForm}
+            rounded
+            style="bg-[#790e4c] mt-8 border-2 rounded-md border-[#b30269]"
+            innerStyle="px-5 p-2 text-[#ffceeb] text-xl font-semibold"
           >
-            <Icon name={"add"} style={"text-green-100"} size={28} />
+            Add Order
           </Button>
         </View>
-        <Wrapper>
-          <OrderInput
-            onChangeText={form.handleChange("shirt_length")}
-            value={form.values.shirt_length}
-            placeholder="Shirt Length"
-            label="Shirt Length"
-            style={"mr-3"}
-          />
-          <OrderInput
-            onChangeText={form.handleChange("around_arm")}
-            value={form.values.around_arm}
-            placeholder="Around Arm"
-            label="Around Arm"
-            style={"mr-3"}
-          />
-        </Wrapper>
-        <Wrapper>
-          <OrderInput
-            onChangeText={form.handleChange("waist")}
-            value={form.values.waist}
-            placeholder="Waist"
-            label="Waist"
-            style={"mr-3"}
-          />
-          <OrderInput
-            onChangeText={form.handleChange("neck")}
-            value={form.values.neck}
-            placeholder="Neck"
-            label="Neck"
-            style={"mr-3"}
-          />
-        </Wrapper>
-        <Wrapper>
-          <OrderInput
-            onChangeText={form.handleChange("trouser_length")}
-            value={form.values.trouser_length}
-            placeholder="Trouser length"
-            label="Trouser length"
-            style={"mr-3"}
-          />
-          <OrderInput
-            onChangeText={form.handleChange("shoulder_to_chest")}
-            value={form.values.shoulder_to_chest}
-            placeholder="Shoulder to nest"
-            label="Shoulder to nest"
-            style={"mr-3"}
-          />
-        </Wrapper>
-        <Wrapper>
-          <OrderInput
-            onChangeText={form.handleChange("hip")}
-            value={form.values.hip}
-            placeholder="Hip"
-            label="Hip"
-            style={"mr-3"}
-          />
-          <OrderInput
-            onChangeText={form.handleChange("shoulder_to_hip")}
-            value={form.values.shoulder_to_hip}
-            placeholder="Shoulder to hip"
-            label="Shoulder to hip"
-            style={"mr-3"}
-          />
-        </Wrapper>
-        <Wrapper>
-          <OrderInput
-            onChangeText={form.handleChange("breast_length")}
-            value={form.values.breast_length}
-            placeholder="Breast length"
-            label="Breast length"
-            style={"mr-3"}
-          />
-          <OrderInput
-            onChangeText={form.handleChange("shoulder_to_waist")}
-            value={form.values.shoulder_to_waist}
-            placeholder="Shoulder to waist"
-            label="Shoulder to waist"
-            style={"mr-3"}
-          />
-        </Wrapper>
-        <Wrapper>
-          <OrderInput
-            onChangeText={form.handleChange("ankle")}
-            value={form.values.ankle}
-            placeholder="Ankle"
-            label="Ankle"
-            style={"mr-3"}
-          />
-          <OrderInput
-            onChangeText={form.handleChange("dress_length")}
-            value={form.values.dress_length}
-            placeholder="Dress length"
-            label="Dress length"
-            style={"mr-3"}
-          />
-        </Wrapper>
-
-        <Input placeholder="Notes" multiline={true} numberOfLines={3} />
-
-        <Button
-          onPress={form.submitForm}
-          rounded
-          style="bg-[#790e4c] mt-8 border-2 rounded-md border-[#b30269]"
-          innerStyle="px-5 p-2 text-[#ffceeb] text-xl font-semibold"
-        >
-          Add Order
-        </Button>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 }
 

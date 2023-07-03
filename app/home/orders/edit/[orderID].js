@@ -18,6 +18,7 @@ import {
   useOrderUpdate,
 } from "../../../../lib/services/orders";
 import Loader from "../../../../components/Loader";
+import { dressStyles } from "../../../../lib/utils";
 
 export default function Edit() {
   const router = useRouter();
@@ -94,6 +95,28 @@ export default function Edit() {
                 <Select.Item label={"Pending"} value={"pending"} />
                 <Select.Item label={"Started"} value={"started"} />
                 <Select.Item label={"Done"} value={"done"} />
+              </Select>
+            </View>
+          </View>
+          <View style={"flex flex-row justify-between items-center pb-4"}>
+            <Text style={"text-base"}>Style:</Text>
+            <View style={"w-5/6"}>
+              <Select
+                selectedValue={form.values.style}
+                minWidth="200"
+                accessibilityLabel="Choose Style"
+                placeholder={"Choose Style"}
+                _selectedItem={{
+                  bg: "#ffceeb",
+                  endIcon: <CheckIcon size="2" />,
+                }}
+                mt={1}
+                style={tw`w-[28%]`}
+                onValueChange={(val) => form.setFieldValue("style", val)}
+              >
+                {dressStyles.map((dress, i) => (
+                  <Select.Item key={i} label={dress.name} value={dress.name} />
+                ))}
               </Select>
             </View>
           </View>
