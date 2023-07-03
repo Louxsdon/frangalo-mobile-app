@@ -11,12 +11,14 @@ import tw from "../lib/tailwind";
 import { useFormik } from "formik";
 import { API_URL } from "../lib/config";
 import { useAuth } from "../lib/services/auth";
+import Loader from "../components/Loader";
 
 axios.defaults.baseURL = API_URL;
 
 export default function Login() {
   const { login, errors } = useAuth((state) => state);
   const router = useRouter();
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const form = useFormik({
     initialValues: {
@@ -24,8 +26,17 @@ export default function Login() {
       password: "",
     },
     onSubmit: (values) => {
+      setIsLoggingIn(true);
       // alert(JSON.stringify(values));
-      login(values);
+      login(values)
+        .then((res) => {
+          setIsLoggingIn(false);
+          alert(res.data.message);
+        })
+        .catch((error) => {
+          setIsLoggingIn(false);
+          console.log(error);
+        });
     },
   });
 
@@ -38,6 +49,7 @@ export default function Login() {
   return (
     <ScrollView style={tw`bg-violet-50`}>
       {/* forms */}
+      <Loader text="Logging In..." isOpen={isLoggingIn} />
       <View style={` `}>
         <View style={`h-[300px]  bg-[#790e4c]`}>
           <Image

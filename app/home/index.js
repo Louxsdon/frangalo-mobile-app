@@ -73,9 +73,11 @@ export default function index() {
 
 function DashCard({ route, icon, text }) {
   const router = useRouter();
+  const { logout } = useAuth((state) => state);
   return (
     <Pressable
       onPress={() => router.push(route)}
+      // onPress={() => logout().then(() => router.replace("/"))}
       style={tw`bg-primary mr-2 p-3 rounded flex justify-center items-center`}
     >
       <Icon name={icon} size={20} style={"text-primary-100"} />

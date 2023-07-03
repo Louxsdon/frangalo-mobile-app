@@ -11,11 +11,14 @@ import tw from "../lib/tailwind";
 import { useFormik } from "formik";
 import { API_URL } from "../lib/config";
 import { useAuth } from "../lib/services/auth";
+import Loader from "../components/Loader";
 
 axios.defaults.baseURL = API_URL;
 
 export default function Register() {
   const { register, errors } = useAuth((state) => state);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   const form = useFormik({
     initialValues: {
@@ -23,8 +26,16 @@ export default function Register() {
       password: "",
     },
     onSubmit: (values) => {
-      // alert(JSON.stringify(values));
-      register(values);
+      setIsSubmitting(true);
+      register(values)
+        .then((res) => {
+          setIsSubmitting(false);
+          form.resetForm();
+          router.replace("/");
+        })
+        .catch(() => {
+          setIsSubmitting(false);
+        });
     },
   });
 
@@ -36,6 +47,7 @@ export default function Register() {
 
   return (
     <ScrollView style={tw`bg-violet-50`}>
+      <Loader isOpen={isSubmitting} text={"Submitting..."} />
       {/* forms */}
       <View style={` `}>
         <View style={`h-[220px]  bg-[#790e4c]`}>
