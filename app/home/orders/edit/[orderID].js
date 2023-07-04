@@ -36,9 +36,9 @@ export default function Edit() {
       setIsUpdating(true);
       updateOrder(values, {
         onSuccess: (res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setIsUpdating(false);
-          alert("Order updated successfully!");
+          alert(res.data.message);
           router.push("/home/orders");
         },
         onError: (err) => {

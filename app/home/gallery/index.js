@@ -82,6 +82,7 @@ export function ViewImage({ images, initialImage }) {
     <Gallery
       initialPage={initialImage}
       images={images}
+      flatListProps={{ windowSize: 2 }}
       imageComponent={({ image }) => {
         return (
           <View style="  rounded-lg overflow-hidden">
