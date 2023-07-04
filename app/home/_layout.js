@@ -62,9 +62,10 @@ export default function BottomNav() {
           }}
         />
         <Tabs.Screen
-          name="settings/index"
+          name="inventories"
           options={{
-            title: "Account",
+            title: "Inventory",
+            headerShown: false,
             tabBarIcon: (props) => (
               <TabItem iconName="settings-outline" {...props} />
             ),
