@@ -1,9 +1,20 @@
 import { StatusBar } from "expo-status-bar";
 import { TabItem } from "../../components/MainTabNav";
 
-import { Tabs } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
+import { useAuth } from "../../lib/services/auth";
+import { useEffect } from "react";
 
 export default function BottomNav() {
+  const { token, user } = useAuth((state) => state);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!token || !user) {
+      router.replace("/");
+    }
+  }, [token, user]);
+
   return (
     <>
       <StatusBar style="light" backgroundColor="#790e4c" />
