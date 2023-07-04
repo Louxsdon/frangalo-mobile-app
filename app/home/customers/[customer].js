@@ -10,6 +10,7 @@ import {
   useAddCustomer,
   useCustomer,
   useCustomerUpdate,
+  useDeleteCustomer,
 } from "../../../lib/services/customers";
 import { useFormik } from "formik";
 import tw from "../../../lib/tailwind";
@@ -22,6 +23,7 @@ export default function Update() {
   const { data, isLoading, error, isError } = useCustomer(customer);
 
   const [deleteRecord, setDeleteRecord] = useState(false);
+  const { deleteCustomer } = useDeleteCustomer();
 
   if (isLoading) {
     return (
@@ -65,7 +67,14 @@ export default function Update() {
               style={"bg-red-600 px-8 py-2 rounded-md"}
               innerStyle={"text-red-100"}
               onPress={() => {
-                setModalVisible(false);
+                setDeleteRecord(false);
+                deleteCustomer(customer, {
+                  onSuccess: (res) => {
+                    router.replace("/home/customers");
+                    alert(res.data?.message);
+                  },
+                  onError: (err) => alert(JSON.stringify(err?.response?.data)),
+                });
               }}
             >
               Yes
