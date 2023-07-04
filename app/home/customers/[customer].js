@@ -92,7 +92,7 @@ export default function Update() {
             <Button
               onPress={() => router.push(`/home/customers/edit/${data.id}`)}
               rounded
-              style="bg-blue-300 px-4 py-[2px] mt-8 border- rounded-md border-[#b30269] mr-4"
+              style="bg-blue-300 px-4 py-[2px] mt-8 rounded-md border-[#b30269] mr-4"
               innerStyle="px-5 p-2 text-blue-600 text-xl font-semibold"
             >
               Edit Customer
